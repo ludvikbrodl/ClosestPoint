@@ -11,7 +11,7 @@ public class main {
 
 	public static void main(String[] args) throws IOException {
 		parser(args);
-		findClosest();
+//		findClosest();
 		// buildMap();
 		// double d =Double.valueOf("7.03600e+02");
 		// System.out.println(d);
@@ -51,7 +51,7 @@ public class main {
 				points[nodeNbr][0] = nodeNbr;
 				points[nodeNbr][1] = x;
 				points[nodeNbr][2] = y;
-//				System.out.println("NodeNbr: " + nodeNbr);
+				System.out.println("NodeNbr: " + nodeNbr);
 //				System.out.println(x);
 //				System.out.println(y);
 			} else if (read.contains("DIMENSION")) {
