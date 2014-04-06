@@ -13,18 +13,22 @@ public class main {
 		parser(args);
 		findClosest();
 		// buildMap();
-//		double d =Double.valueOf("7.03600e+02");
-//		System.out.println(d);
+		// double d =Double.valueOf("7.03600e+02");
+		// System.out.println(d);
 	}
 
 	// 4 8.75100e+02 1.13610e+03
 	public static void parser(String[] arg) throws IOException {
-		FileReader fr = new FileReader(new File("/Users/krantz/git/ClosestPoint/ClosestPoint/lab4/d198.tsp"));
+		FileReader fr = new FileReader(new File("/Users/krantz/git/ClosestPoint/ClosestPoint/lab4/usa13509.tsp"));
 		BufferedReader br = new BufferedReader(fr);
 
 		// NODE_COORD_SECTION
 		// 1 245552.778 817827.778
 		// 2 247133.333 810905.556
+		// Alt.
+		// 2 5.51200e+02 9.96400e+02
+		// 3 6.27400e+02 9.96400e+02
+
 		String trimRead;
 		String read;
 		while (br.ready()) {
@@ -47,11 +51,11 @@ public class main {
 				points[nodeNbr][0] = nodeNbr;
 				points[nodeNbr][1] = x;
 				points[nodeNbr][2] = y;
-				System.out.println("NodeNbr: " + nodeNbr);
-				System.out.println(x);
-				System.out.println(y);
+//				System.out.println("NodeNbr: " + nodeNbr);
+//				System.out.println(x);
+//				System.out.println(y);
 			} else if (read.contains("DIMENSION")) {
-				
+
 				String[] dim = read.split(":");
 				String l = dim[1].trim();
 				int length = Integer.parseInt(l);
@@ -76,16 +80,19 @@ public class main {
 					double otherId = points[j][0];
 					double otherX = points[j][1];
 					double otherY = points[j][2];
-					System.out.println("ID: " + id + " X: " + x + " Y: " + y);
-					System.out.println("ID: " + otherId + "X: " + otherX + " Y: " + otherY);
+//					System.out.println("ID: " + id + " X: " + x + " Y: " + y);
+//					System.out.println("ID: " + otherId + "X: " + otherX + " Y: " + otherY);
 					double l = Math.hypot((otherX - x), (otherY - y));
-					System.out.println("Hypot: " + l);
+//					System.out.println("Hypot: " + l);
 					if (l < shortest) {
+//						if(l == 0.0){
+//							System.out.println("HEHE");
+//						}
 						shortest = l;
 					}
 				}
 			}
-			System.out.println();
+//			System.out.println();
 		}
 		System.out.println("Shortest is: " + shortest);
 
