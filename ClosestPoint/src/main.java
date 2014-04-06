@@ -7,42 +7,64 @@ import java.io.IOException;
 public class main {
 
 	// [id][x - y]
-	double[][] points = new double[4][3];
+	static double[][] points = new double[280][3];
 
-	public static void main(String[] args) {
-		new main();
-	}
-
-	public main() {
-		buildMap();
+	public static void main(String[] args) throws IOException {
+		parser(args);
 		findClosest();
-
+		// buildMap();
+//		double d =Double.valueOf("7.03600e+02");
+//		System.out.println(d);
 	}
 
 	// 4 8.75100e+02 1.13610e+03
-	public void parser(String[] arg) throws IOException {
-		FileReader fr = new FileReader(new File(arg[0]));
+	public static void parser(String[] arg) throws IOException {
+		FileReader fr = new FileReader(new File("/Users/krantz/git/ClosestPoint/ClosestPoint/lab4/d198.tsp"));
 		BufferedReader br = new BufferedReader(fr);
-		boolean ok = true;
-		String line = br.readLine();
-		String[] nbrs = line.split(" ");
-		
-		while(ok){
-		 try { 
-		        Double id = Double.parseDouble(nbrs[0]); 
-		        ok = false;
-		    } catch(NumberFormatException e) { 
-		    	
-		    }
-		}
+
+		// NODE_COORD_SECTION
+		// 1 245552.778 817827.778
+		// 2 247133.333 810905.556
+		String trimRead;
+		String read;
 		while (br.ready()) {
+			read = br.readLine();
+			trimRead = read;
+			trimRead = read.replaceAll("\\s+", " ");
+			if (trimRead.charAt(0) == ' ') {
+				trimRead = trimRead.substring(1);
+			}
+
+			String[] nbrs = trimRead.split(" ");
+
+			if (Character.isDigit((nbrs[0].charAt(0)))) {
+				int nodeNbr = Integer.parseInt(nbrs[0]);
+				String xNbr = nbrs[1].trim();
+				double x = Double.valueOf(xNbr);
+				String yNbr = nbrs[2].trim();
+				double y = Double.valueOf(yNbr);
+
+				points[nodeNbr][0] = nodeNbr;
+				points[nodeNbr][1] = x;
+				points[nodeNbr][2] = y;
+				System.out.println("NodeNbr: " + nodeNbr);
+				System.out.println(x);
+				System.out.println(y);
+			} else if (read.contains("DIMENSION")) {
 				
+				String[] dim = read.split(":");
+				String l = dim[1].trim();
+				int length = Integer.parseInt(l);
+				points = new double[length + 1][3];
+				;
+			}
+
 		}
-		
+
 		br.close();
 	}
 
-	private void findClosest() {
+	private static void findClosest() {
 		double shortest = Double.MAX_VALUE;
 
 		for (int i = 0; i < points.length; i++) {
@@ -55,9 +77,7 @@ public class main {
 					double otherX = points[j][1];
 					double otherY = points[j][2];
 					System.out.println("ID: " + id + " X: " + x + " Y: " + y);
-					System.out.println("ID: " + otherId + "X: " + otherX
-							+ " Y: " + otherY);
-
+					System.out.println("ID: " + otherId + "X: " + otherX + " Y: " + otherY);
 					double l = Math.hypot((otherX - x), (otherY - y));
 					System.out.println("Hypot: " + l);
 					if (l < shortest) {
@@ -67,11 +87,12 @@ public class main {
 			}
 			System.out.println();
 		}
-		System.out.println(shortest);
+		System.out.println("Shortest is: " + shortest);
 
 	}
 
-	private void buildMap() {
+	private static void buildMap() {
+
 		// id 0-1 closest
 		points[0][0] = 0;
 		points[1][0] = 1;
