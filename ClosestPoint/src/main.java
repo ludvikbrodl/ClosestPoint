@@ -64,7 +64,7 @@ public class main {
 
 	public static double findNearMiddleClosest(Point[] closeP, double closestDistSides){
 		//Sort after Y-koord
-		//
+		//BruteForce
 		
 		return closestDistSides;
 		
