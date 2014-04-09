@@ -2,10 +2,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-
+import java.util.Comparator;
 public class main {
 
 	// [id][x - y]
@@ -17,8 +15,8 @@ public class main {
 		// buildMap();
 		// double d =Double.valueOf("7.03600e+02");
 		// System.out.println(d);
-		Arrays.sort(points);
-		findclosestRec(points, points.length);
+		 Arrays.sort(points);
+		 findclosestRec(points, points.length);
 
 	}
 
@@ -43,32 +41,36 @@ public class main {
 		double smallestDistSides = Double.MAX_VALUE;
 		if (left < right) {
 			smallestDistSides = left;
-		} else  {
+		} else {
 			smallestDistSides = right;
-		} 
+		}
 		Point[] closeMiddle = new Point[n];
 		int j = 0;
-		for (int i = 0; i < n; i++){
-	        if (Math.abs(p[i].x - midPoint.x) < smallestDistSides) {
-	            closeMiddle[j] = p[i]; 
-	            j++;
-	        }
+		for (int i = 0; i < n; i++) {
+			if (Math.abs(p[i].x - midPoint.x) < smallestDistSides) {
+				closeMiddle[j] = p[i];
+				j++;
+			}
 		}
 		double closestMiddle = findNearMiddleClosest(closeMiddle, smallestDistSides);
-		if(closestMiddle < smallestDistSides){
+		if (closestMiddle < smallestDistSides) {
 			return closestMiddle;
 		} else {
 			return smallestDistSides;
 		}
 	}
 
-	public static double findNearMiddleClosest(Point[] closeP, double closestDistSides){
-		//Sort after Y-koord
-		//BruteForce
+	public static double findNearMiddleClosest(Point[] closeP, double closestDistSides) {
+		// Sort after Y-koord
+		Arrays.sort(closeP, new ComperatorY());
+		// BruteForce
 		
+		double smallestMiddle = findClosest(closeP);
+		System.out.println(smallestMiddle);
 		return closestDistSides;
-		
+
 	}
+
 	private static double findClosest(Point[] p) {
 		double shortest = Double.MAX_VALUE;
 
@@ -125,8 +127,7 @@ public class main {
 
 	// 4 8.75100e+02 1.13610e+03
 	public static void parser(String[] arg) throws IOException {
-		FileReader fr = new FileReader(new File(
-				"/Users/krantz/git/ClosestPoint/ClosestPoint/lab4/rd400.tsp"));
+		FileReader fr = new FileReader(new File("/Users/krantz/git/ClosestPoint/ClosestPoint/lab4/rd400.tsp"));
 		BufferedReader br = new BufferedReader(fr);
 
 		// NODE_COORD_SECTION
@@ -139,14 +140,19 @@ public class main {
 		String trimRead;
 		String read;
 		while (br.ready()) {
+//			
+//			read = br.readLine();
+//			trimRead = read;
+//			trimRead = read.replaceAll("\\s+", " ");
+//			if (trimRead.charAt(0) == ' ') {
+//				trimRead = trimRead.substring(1);
+//			}
+//
+//			String[] nbrs = trimRead.split(" ");
 			read = br.readLine();
 			trimRead = read;
-			trimRead = read.replaceAll("\\s+", " ");
-			if (trimRead.charAt(0) == ' ') {
-				trimRead = trimRead.substring(1);
-			}
 
-			String[] nbrs = trimRead.split(" ");
+			String[] nbrs = trimRead.split("\\s+");
 
 			if (Character.isDigit((nbrs[0].charAt(0)))) {
 				int nodeNbr = Integer.parseInt(nbrs[0]);
@@ -155,17 +161,16 @@ public class main {
 				String yNbr = nbrs[2].trim();
 				double y = Double.valueOf(yNbr);
 
-				points[nodeNbr] = new Point(x, y);
-
-				// points[nodeNbr][0] = nodeNbr;
+				points[nodeNbr - 1] = new Point(x, y);
+				System.out.println("X: " + points[nodeNbr-1].x);
+//				 points[nodeNbr][0] = nodeNbr;
 				// points[nodeNbr][1] = x;
 				// points[nodeNbr][2] = y;
 				//
-				// System.out.println("NodeNbr: " + nodeNbr);
-				// System.out.println(x);
-				// System.out.println(y);
+//				 System.out.println("NodeNbr: " + nodeNbr);
+//				 System.out.println(x);
+//				 System.out.println(y);
 			} else if (read.contains("DIMENSION")) {
-
 				String[] dim = read.split(":");
 				String l = dim[1].trim();
 				int length = Integer.parseInt(l);
@@ -174,7 +179,27 @@ public class main {
 			}
 
 		}
-
+		System.out.println("ndks");
+		System.out.println(points.length);
+		System.out.println(points[0].x);
 		br.close();
+	}
+
+	static class ComperatorY implements Comparator<Point> {
+
+		@Override
+		public int compare(Point o1, Point o2) {
+			
+			double y1 = o1.y;
+			double y2 = o2.y;
+			if (y1 > y2) {
+				return 1;
+			} else if (y1 == y2) {
+				return 0;
+			} else {
+				return -1;
+			}
+		}
+
 	}
 }
