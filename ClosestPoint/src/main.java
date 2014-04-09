@@ -15,7 +15,10 @@ public class main {
 		// buildMap();
 		// double d =Double.valueOf("7.03600e+02");
 		// System.out.println(d);
-		 Arrays.sort(points);
+
+		for (int i = 0; i < args.length; i++) {
+			
+		}
 		 findclosestRec(points, points.length);
 
 	}
