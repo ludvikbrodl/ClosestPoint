@@ -83,6 +83,7 @@ public class main {
 			for (int j = 0; j < points.length; j++) {
 				if (i != j) {
 					// double otherId = points[j][0];
+					System.out.println(x);
 					double otherX = points[j].x;
 					double otherY = points[j].y;
 					// System.out.println("ID: " + id + " X: " + x + " Y: " +
