@@ -2,31 +2,67 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 public class main {
 
-	// [id][x - y]
-	static Point[] points;
+	static Point[] pointsX, pointsY;
 
 	public static void main(String[] args) throws IOException {
 		parser(args);
-		// findClosest();
-		// buildMap();
-		// double d =Double.valueOf("7.03600e+02");
-		// System.out.println(d);
+		System.out.println(args[0] + " " + pointsX.length + " " + closestPair());
 
-		for (int i = 0; i < args.length; i++) {
-			
+	}
+
+	private static double closestPair() {
+		//sort the points, tested - works
+		Arrays.sort(pointsY, new ComparatorY());
+		Arrays.sort(pointsX);
+		
+		double closest = closestPairRec(pointsX, pointsY);
+		return closest;
+	}
+
+	private static double closestPairRec(Point[] pointsX, Point[] pointsY) {
+		if (pointsX.length < 3) {
+			return findClosestBrute(pointsX);
 		}
-		 findclosestRec(points, points.length);
+		Point[] leftX = new Point[pointsX.length/2]; 
+		Point[] rightX = new Point[pointsX.length-(pointsX.length/2)]; 
+		System.arraycopy(pointsX, 0, leftX, 0, pointsX.length/2);
+		System.arraycopy(pointsX, (pointsX.length/2), rightX, 0, pointsX.length-(pointsX.length/2));
+		
+		double xMiddle = pointsX[pointsX.length/2].x;
 
+		Point[] leftY = new Point[leftX.length];
+		Point[] rightY = new Point[rightX.length];
+		System.arraycopy(leftX, 0, leftY, 0, leftX.length);
+		System.arraycopy(rightX, 0, rightY, 0, rightX.length);
+		
+		double distanceLeft = closestPairRec(leftX, leftY);
+		double distanceRight = closestPairRec(rightX, rightY);
+		double minDistance = Math.min(distanceLeft, distanceRight);
+		
+		ArrayList<Point> middlePointsArray = new ArrayList<Point>();
+		for (int i = 0; i < pointsY.length; i++) {
+			if (Math.abs(xMiddle - pointsY[i].x) < minDistance) {
+				middlePointsArray.add(pointsY[i]);
+			}
+		}
+		Point[] middlePoints = new Point[middlePointsArray.size()];
+		for (int i = 0; i < middlePoints.length; i++) {
+			middlePoints[i] = middlePointsArray.get(i);
+		}
+		double distanceMiddle = findClosestBrute(middlePoints);
+		minDistance = Math.min(minDistance, distanceMiddle);
+		return minDistance;
 	}
 
 	public static double findclosestRec(Point[] p, int n) {
 
 		if (n < 4) {
-			return findClosest(p);
+			return findClosestBrute(p);
 		}
 		int mid = p.length / 2;
 		Point midPoint = p[mid];
@@ -65,44 +101,31 @@ public class main {
 
 	public static double findNearMiddleClosest(Point[] closeP, double closestDistSides) {
 		// Sort after Y-koord
-		Arrays.sort(closeP, new ComperatorY());
+		Arrays.sort(closeP, new ComparatorY());
 		// BruteForce
 		
-		double smallestMiddle = findClosest(closeP);
-		System.out.println(smallestMiddle);
+		double smallestMiddle = findClosestBrute(closeP);
 		return closestDistSides;
 
 	}
 
-	private static double findClosest(Point[] p) {
+	private static double findClosestBrute(Point[] p) {
 		double shortest = Double.MAX_VALUE;
 
-		for (int i = 0; i < points.length; i++) {
-			double x = points[i].x;
-			double y = points[i].y;
-			for (int j = 0; j < points.length; j++) {
+		for (int i = 0; i < p.length; i++) {
+			double x = p[i].x;
+			double y = p[i].y;
+			for (int j = 0; j < p.length; j++) {
 				if (i != j) {
-					// double otherId = points[j][0];
-					System.out.println(x);
-					double otherX = points[j].x;
-					double otherY = points[j].y;
-					// System.out.println("ID: " + id + " X: " + x + " Y: " +
-					// y);
-					// System.out.println("ID: " + otherId + "X: " + otherX +
-					// " Y: " + otherY);
+					double otherX = p[j].x;
+					double otherY = p[j].y;
 					double l = Math.hypot((otherX - x), (otherY - y));
-					// System.out.println("Hypot: " + l);
 					if (l < shortest) {
-						// if(l == 0.0){
-						// System.out.println("HEHE");
-						// }
 						shortest = l;
 					}
 				}
 			}
-			// System.out.println();
 		}
-		System.out.println("Shortest is: " + shortest);
 		return shortest;
 	}
 
@@ -126,12 +149,16 @@ public class main {
 				return 0;
 			}
 		}
+		
+		@Override
+		public String toString() {
+			return x + " " + y;
+		}
 
 	}
 
-	// 4 8.75100e+02 1.13610e+03
 	public static void parser(String[] arg) throws IOException {
-		FileReader fr = new FileReader(new File("/Users/krantz/git/ClosestPoint/ClosestPoint/lab4/rd400.tsp"));
+		FileReader fr = new FileReader(new File(arg[0]));
 		BufferedReader br = new BufferedReader(fr);
 
 		// NODE_COORD_SECTION
@@ -165,8 +192,9 @@ public class main {
 				String yNbr = nbrs[2].trim();
 				double y = Double.valueOf(yNbr);
 
-				points[nodeNbr - 1] = new Point(x, y);
-				System.out.println("X: " + points[nodeNbr-1].x);
+				pointsX[nodeNbr - 1] = new Point(x, y);
+				pointsY[nodeNbr - 1] = new Point(x, y);
+//				System.out.println("X: " + points[nodeNbr-1].x);
 //				 points[nodeNbr][0] = nodeNbr;
 				// points[nodeNbr][1] = x;
 				// points[nodeNbr][2] = y;
@@ -178,18 +206,16 @@ public class main {
 				String[] dim = read.split(":");
 				String l = dim[1].trim();
 				int length = Integer.parseInt(l);
-				points = new Point[length + 1];
+				pointsX = new Point[length];
+				pointsY = new Point[length];
 
 			}
 
 		}
-		System.out.println("ndks");
-		System.out.println(points.length);
-		System.out.println(points[0].x);
 		br.close();
 	}
 
-	static class ComperatorY implements Comparator<Point> {
+	static class ComparatorY implements Comparator<Point> {
 
 		@Override
 		public int compare(Point o1, Point o2) {
