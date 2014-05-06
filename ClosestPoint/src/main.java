@@ -161,13 +161,6 @@ public class main {
 		FileReader fr = new FileReader(new File(arg[0]));
 		BufferedReader br = new BufferedReader(fr);
 
-		// NODE_COORD_SECTION
-		// 1 245552.778 817827.778
-		// 2 247133.333 810905.556
-		// Alt.
-		// 2 5.51200e+02 9.96400e+02
-		// 3 6.27400e+02 9.96400e+02
-
 		String trimRead;
 		String read;
 		while (br.ready()) {
@@ -181,11 +174,13 @@ public class main {
 //
 //			String[] nbrs = trimRead.split(" ");
 			read = br.readLine();
-			trimRead = read;
-
+			trimRead = read.trim();
+			
 			String[] nbrs = trimRead.split("\\s+");
-
-			if (Character.isDigit((nbrs[0].charAt(0)))) {
+//			nbrs[0] = nbrs[0].replace(" ", "");
+			
+			if (!read.equals("") && Character.isDigit((nbrs[0].charAt(0)))) {
+				
 				int nodeNbr = Integer.parseInt(nbrs[0]);
 				String xNbr = nbrs[1].trim();
 				double x = Double.valueOf(xNbr);
