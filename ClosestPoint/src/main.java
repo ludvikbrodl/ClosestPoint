@@ -59,56 +59,6 @@ public class main {
 		return minDistance;
 	}
 
-	public static double findclosestRec(Point[] p, int n) {
-
-		if (n < 4) {
-			return findClosestBrute(p);
-		}
-		int mid = p.length / 2;
-		Point midPoint = p[mid];
-
-		Point[] source = new Point[p.length];
-
-		Point[] part1 = new Point[mid];
-		Point[] part2 = new Point[mid];
-
-		System.arraycopy(source, 0, part1, 0, part1.length);
-		System.arraycopy(source, part1.length, part2, 0, part2.length);
-		double left = findclosestRec(part1, mid);
-
-		double right = findclosestRec(part2, n - mid);
-		double smallestDistSides = Double.MAX_VALUE;
-		if (left < right) {
-			smallestDistSides = left;
-		} else {
-			smallestDistSides = right;
-		}
-		Point[] closeMiddle = new Point[n];
-		int j = 0;
-		for (int i = 0; i < n; i++) {
-			if (Math.abs(p[i].x - midPoint.x) < smallestDistSides) {
-				closeMiddle[j] = p[i];
-				j++;
-			}
-		}
-		double closestMiddle = findNearMiddleClosest(closeMiddle, smallestDistSides);
-		if (closestMiddle < smallestDistSides) {
-			return closestMiddle;
-		} else {
-			return smallestDistSides;
-		}
-	}
-
-	public static double findNearMiddleClosest(Point[] closeP, double closestDistSides) {
-		// Sort after Y-koord
-		Arrays.sort(closeP, new ComparatorY());
-		// BruteForce
-		
-		double smallestMiddle = findClosestBrute(closeP);
-		return closestDistSides;
-
-	}
-
 	private static double findClosestBrute(Point[] p) {
 		double shortest = Double.MAX_VALUE;
 
@@ -158,26 +108,18 @@ public class main {
 	}
 
 	public static void parser(String[] arg) throws IOException {
+		long st = System.currentTimeMillis();
 		FileReader fr = new FileReader(new File(arg[0]));
 		BufferedReader br = new BufferedReader(fr);
 
 		String trimRead;
 		String read;
 		while (br.ready()) {
-//			
-//			read = br.readLine();
-//			trimRead = read;
-//			trimRead = read.replaceAll("\\s+", " ");
-//			if (trimRead.charAt(0) == ' ') {
-//				trimRead = trimRead.substring(1);
-//			}
-//
-//			String[] nbrs = trimRead.split(" ");
+
 			read = br.readLine();
 			trimRead = read.trim();
 			
 			String[] nbrs = trimRead.split("\\s+");
-//			nbrs[0] = nbrs[0].replace(" ", "");
 			
 			if (!read.equals("") && Character.isDigit((nbrs[0].charAt(0)))) {
 				
@@ -189,14 +131,7 @@ public class main {
 
 				pointsX[nodeNbr - 1] = new Point(x, y);
 				pointsY[nodeNbr - 1] = new Point(x, y);
-//				System.out.println("X: " + points[nodeNbr-1].x);
-//				 points[nodeNbr][0] = nodeNbr;
-				// points[nodeNbr][1] = x;
-				// points[nodeNbr][2] = y;
-				//
-//				 System.out.println("NodeNbr: " + nodeNbr);
-//				 System.out.println(x);
-//				 System.out.println(y);
+
 			} else if (read.contains("DIMENSION")) {
 				String[] dim = read.split(":");
 				String l = dim[1].trim();
@@ -208,6 +143,9 @@ public class main {
 
 		}
 		br.close();
+		long end = System.currentTimeMillis();
+//		System.out.println("Parsiong time:  "  + (end-st));
+
 	}
 
 	static class ComparatorY implements Comparator<Point> {

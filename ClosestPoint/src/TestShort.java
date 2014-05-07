@@ -1,5 +1,3 @@
-import org.junit.After;
-import org.junit.Before;
 
 import static org.junit.Assert.*;
 
@@ -30,8 +28,6 @@ public class TestShort {
 		 * Divert stdout to buffer
 		 */
 		long start = System.currentTimeMillis();
-		// System.out.println(datafile);
-		// System.out.println(outfile);
 
 		PrintStream oldOut = System.out;
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -79,23 +75,13 @@ public class TestShort {
 			System.out.println(rightLine);
 			String[] result = rightLine.split("\\s+");
 			String[] outResult = baos.toString().split("\\s+");
-//			System.out.println(result[1]);
-//			System.out.println(result[2]);
-//			System.out.println(outResult[1]);
-//			System.out.println(outResult[2]);
 			double d = Double.valueOf(format.format(Double.valueOf(result[1])));
 			double d1 = Double.valueOf(format.format(Double.valueOf(outResult[1])));
 			double d2 = Double.valueOf(format.format(Double.valueOf(result[2])));
 			double d3 = Double.valueOf(format.format(Double.valueOf(outResult[2])));
-//			System.out.println(d);
-//			System.out.println(d1);
-//			System.out.println(d2);
-//			System.out.println(d3);
-
-//			assertTrue().equals()));
-//			assertTrue(format.format(Double.valueOf(result[2])).equals(
-//					format.format(Double.valueOf(outResult[2]))));
-			// assertEquals(sb.toString(), baos.toString());
+			
+			assertEquals(d1, d,0.00001 );
+			assertEquals(d3, d2, 0.00001);
 		} catch (FileNotFoundException e) {
 			fail("File " + outfile + " not found.");
 		} catch (IOException e) {
@@ -105,15 +91,6 @@ public class TestShort {
 		System.out.println("Elapsed time (ms): " + (done - start));
 	}
 
-	/**
-	 * Simple test case for the 'friends' test data.
-	 * 
-	 * @throws IOException
-	 */
-	// @Test
-	// public void testFriends() throws IOException {
-	// runTestCase("sm-friends");
-	// }
 
 	/**
 	 * Test case that will use all test data it can find in TESTDATA_DIR.
