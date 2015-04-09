@@ -1,4 +1,0 @@
-ClosestPoint
-============
-
-Shit
